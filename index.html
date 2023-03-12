@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        p,
+        .justify {
+            text-align: justify;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .zspi-table {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+        }
+
+        .smaller {
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        .smaller td {
+            width: 50%;
+        }
+
+        .normal-size {
+            font-size: 1rem !important;
+        }
+
+        .top-line {
+            border-top: 1px solid black;
+        }
+
+        .grb {
+            height: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1><img class="grb" src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Coat_of_arms_of_Slovenia.svg"> Generator ZDIJZ zahtev za Republiko Slovenijo</h1>
+    <p>
+        Zahteva se generira kot HTML stran, katero lahko podpišete in pošljete zavezancu.
+    </p>
+    <hr>
+    <h2>Podatki o zahtevi</h2>
+    <table class="zspi-table">
+        <tbody>
+            <tr>
+                <td>
+                    <b>Tip zahteve:</b>
+                    <select id="tip">
+                        <option value="DI">DI - dostop do informacij javnega značaja</option>
+                        <option value="PDI">PDI - ponovna uporaba informacij javnega značaja</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Podatki o prosilcu (ime in priimek, naslov, mesto, e-pošta, telefon (opcijsko))
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="prosilec" rows="4" cols="50" class="zspi-table"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Zavezanec (organ) (Lahko vam pomaga <a href="https://www.ajpes.si/rzijz">RZIJZ</a>)
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="zavezanec" rows="4" cols="50" class="zspi-table"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Podatki o zahtevi - iskani podatki (2 vrstici == nova postavka v zahtevi)<br/>
+                    <small id="info-opis-DI">(V nadaljevanju čim bolj določno opišite dokumente, ki jih želite prejeti. Če gre za obsežno dokumentacijo, skušajte zahtevo omejiti. Za plačilo stroškov posredovanja izda organ prosilcu sklep, če materialni stroški posredovanja informacij presegajo 20 eurov.)</small>
+                    <small id="info-opis-PDI" hidden="">(V nadaljevanju čim bolj določno opišite podatke oziroma dokumente, ki jih želite prejeti. Za ponovno uporabo podatkov lahko organ zaračuna mejne stroške, ne sme pa zaračunati cene. Cena in drugi pogoji glede ponovne uporabe informacij so podrobneje urejeni v 34.a členu ZDIJZ)</small>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <textarea id="podatki" rows="4" cols="50" class="zspi-table"></textarea>
+                </td>
+            </tr>
+            <tr id="pdi-1" hidden="">
+                <th>
+                    PDI - namen za ponovno uporabo informacij
+                </th>
+            </tr>
+            <tr id="pdi-2" hidden="">
+                <td>
+                    <textarea id="namen" rows="4" cols="50" class="zspi-table"></textarea>
+                </td>
+            </tr>
+            <tr id="pdi-3" hidden="">
+                <th>
+                    PDI - predvideni način ponovne uporabe informacij javnega značaja
+                </th>
+            </tr>
+            <tr id="pdi-4" hidden="">
+                <td>
+                    <textarea id="uporaba" rows="4" cols="50" class="zspi-table"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Podatki o zahtevi - način dostopa do podatkov<br/>
+                    <small>(vpogled pri organu, prepis pri organu, fotokopija ali
+                    izpis, elektronski zapis (npr. zapis na DVD/CD, USB, datoteka po e-pošti, kot dinamični podatki <small>(glej 10.č člen <a href="http://pisrs.si/Pis.web/pregledPredpisa?id=ZAKO3336">ZDIJZ</a>)</small>))</small>
+                    <br>Dopolnuje stavek <code>Prosim vas, da mi zahtevane informacije zagotovite v naslednji obliki: </code>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <input id="pristop" type="text" class="zspi-table">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <hr>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Mesto in datum: <input id="mesto" type="text" class="zspi-table">
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <button id="generate">
+        <h2>Generiraj zahtevo (odpre se v novem zavihku)</h2>
+    </button>
+    <hr>
+    <p>
+        Generator ni uradno orodje. Uporaba generatorja je na lastno odgovornost.
+        <br>
+        Avtor ne odgovarja za morebitne napake v generirani zahtevi.
+    </p>
+
+    <script>
+        window.onload = async () => {
+            document.getElementById('tip').addEventListener('change', (e) => {
+                if (e.target.value === 'PDI') {
+                    document.getElementById('info-opis-DI').hidden = true
+                    document.getElementById('info-opis-PDI').hidden = false
+                    document.getElementById('pdi-1').hidden = false
+                    document.getElementById('pdi-2').hidden = false
+                    document.getElementById('pdi-3').hidden = false
+                    document.getElementById('pdi-4').hidden = false
+                } else {
+                    document.getElementById('info-opis-DI').hidden = false
+                    document.getElementById('info-opis-PDI').hidden = true
+                    document.getElementById('pdi-1').hidden = true
+                    document.getElementById('pdi-2').hidden = true
+                    document.getElementById('pdi-3').hidden = true
+                    document.getElementById('pdi-4').hidden = true
+                }
+            });
+            document.getElementById('generate').addEventListener('click', () => {
+                let data = {}
+                data.tip = document.getElementById('tip').value
+                data.prosilec = document.getElementById('prosilec').value.replace(/\n/g, '<br>')
+                data.zavezanec = document.getElementById('zavezanec').value.replace(/\n/g, '<br>')
+                data.podatki = document.getElementById('podatki').value.split('\n\n').map((x) => x.replace(/\n/g, '<br>'))
+                data.namen = document.getElementById('namen').value.replace(/\n/g, '<br>')
+                data.uporaba = document.getElementById('uporaba').value.replace(/\n/g, '<br>')
+                data.pristop = document.getElementById('pristop').value
+                data.mesto = document.getElementById('mesto').value
+                // encode to base64
+                let encoded = encodeURIComponent(JSON.stringify(data))
+                // open in new tab zahteva.html?data=encoded
+                window.open(`zahteva.html?data=${encoded}`, '_blank')
+            });//
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        p,
+        .justify {
+            text-align: justify;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .zdijz-table {
+            border-collapse: collapse;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .smaller {
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        .normal-size {
+            font-size: 1rem !important;
+        }
+
+        .top-line {
+            border-top: 1px solid black;
+        }
+    </style>
+    <title>ZDIJZ - Zahteva za dostop informaciji</title>
+</head>
+
+<body>
+    <div id="zdijz">
+        <table class="zdijz-table">
+            <tbody>
+                <tr>
+                    <th class="justify">Prosilec</th>
+                </tr>
+                <tr>
+                    <td id="prosilec" class="justify"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <table class="zdijz-table">
+            <tbody>
+                <tr>
+                    <th class="justify">Organ</th>
+                </tr>
+                <tr>
+                    <td id="organ" class="justify"></td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="justify">
+            <b>Zadeva: </b> <span id="zadeva">Zahteva za dostop informaciji javnega značaja</span>
+            <br>
+            <br>
+            <span id="zdijz-di">
+                Na podlagi Zakona o dostopu do informacij javnega značaja (Ur. l. RS, št. 51/06-UPB2, 117/06–ZDavP-2,
+                23/14-ZDIJZ-C, 50/14-ZDIJZ-D, 19/15–odl. US, 102/15-ZDIJZ-E, 7/18-ZDIJZ-F in 141/22-ZDIJZ-G; ZDIJZ) naslovni organ zaprošam za dostop
+                do naslednjih dokumentov:
+            </span>
+            <span id="zdijz-pdi" hidden="">
+                Na podlagi Zakona o dostopu do informacij javnega značaja (Ur. l. RS, št. 51/06-UPB2, 117/06–ZDavP-2,
+                23/14-ZDIJZ-C, 50/14-ZDIJZ-D, 19/15–odl. US, 102/15-ZDIJZ-E, 7/18-ZDIJZ-F in 141/22-ZDIJZ-G; ZDIJZ) naslovni organ zaprošam za ponovno
+                uporabo naslednjih informacij:
+            </span>
+        </p>
+        <ol id="zdijz-ol" class="justify">
+        </ol>
+        <div class="justify" id="zdijz-pdi-namen" hidden="">
+            <p>
+                <b>Namen za ponovno uporabo informacij:</b>
+            </p>
+            <p>
+                <span id="zdijz-pdi-namen-text"></span>
+            </p>
+        </div>
+        <div class="justify" id="zdijz-pdi-nacin" hidden="">
+            <p>
+                <b>Predvideni način ponovne uporabe informacij javnega značaja:</b>
+            </p>
+            <p>
+                <span id="zdijz-pdi-nacin-text"></span>
+            </p>
+        </div>
+        <p class="justify">
+            Prosim vas, da mi zahtevane informacije zagotovite v naslednji obliki: <span id="zdijz-oblika"></span>.
+        </p>
+        <br>
+        <br>
+        <table class="zdijz-table smaller">
+            <tbody>
+                <tr>
+                    <td id="mjesto-datum" class="normal-size" style="width:45%"></td>
+                    <td></td>
+                    <td style="width:45%"><br></td>
+                </tr>
+                <tr>
+                    <th class="top-line" style="width:45%">Mesto in datum</th>
+                    <td></td>
+                    <th class="top-line" style="width:45%">Lastnoročni ali elektronski podpis prosilca</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let zadeve = {
+            'DI': 'Zahteva za dostop do informacij javnega značaja',
+            'PDI': 'Zahteva za ponovno uporabo informacij javnega značaja',
+        }
+        window.onload = async () => {
+            // get data parameter and convert from base64 then reencode uri and then parse json
+            try {
+                const data = JSON.parse(decodeURIComponent(window.location.search.split('=')[1]));
+                console.log(data);
+                // set data to html
+                document.getElementById('prosilec').innerHTML = data.prosilec;
+                document.getElementById('organ').innerHTML = data.zavezanec;
+                document.getElementById('zadeva').innerHTML = zadeve[data.tip];
+                document.getElementById('mjesto-datum').innerHTML = data.mesto;
+                document.getElementById('zdijz-oblika').innerHTML = data.pristop;
+                if (data.tip == 'PDI') {
+                    document.getElementById("zdijz-di").hidden = true;
+                    document.getElementById("zdijz-pdi").hidden = false;
+                    document.getElementById("zdijz-pdi-namen").hidden = false;
+                    document.getElementById("zdijz-pdi-namen-text").innerHTML = data.namen;
+                    document.getElementById("zdijz-pdi-nacin").hidden = false;
+                    document.getElementById("zdijz-pdi-nacin-text").innerHTML = data.uporaba;
+                }
+                for (let podatek of data.podatki) {
+                    let li = document.createElement('li');
+                    li.innerHTML = podatek;
+                    document.getElementById('zdijz-ol').appendChild(li)
+                }
+            } catch (e) {
+                alert(e);
+                return;
+            }
+        }
+    </script>
+</body>
+
+</html>
